@@ -50,18 +50,18 @@ class statsd ($graphite_host, $graphite_port = 2003, $port = 8125, $debug = 1, $
       owner  => "root",
       group  => "root",
       mode   => "0644",
-      source => "puppet:///modules/statsd/statsd.init.upstart";
+      source => "puppet:///modules/statsd/etc/init/statsd.conf";
 
     "/usr/local/bin/statsd_client.pl":
       ensure => file,
       owner  => "root",
       group  => "root",
       mode   => "0755",
-      source => "puppet:///modules/statsd/statsd_client.pl";
+      source => "puppet:///modules/statsd/usr/local/bin/statsd_client.pl";
 
     "/etc/statsd.js":
       ensure  => file,
-      content => template("statsd/statsd.js.erb");
+      content => template("statsd/etc/statsd.js.erb");
   }
 
   exec { "restart-statsd":
