@@ -34,14 +34,19 @@ class statsd ($graphite_host, $graphite_port = 2003, $port = 8125, $debug = 1, $
   ## actually nodejs:
   include meteor
 
-  exec { "npm-statsd":
-    command     => "npm install -g statsd",
-    #refreshonly => true,
-    creates     => "/usr/lib/node_modules/statsd/bin/statsd",
-    require     => Class['meteor'],
-    #require    => Exec['install nodejs'],
-    # you can trigger an update of statsd package by changing /etc/statsd.js, bit of a hack but works
-    subscribe   => File["/etc/statsd.js"],
+  exec {
+    "npm-statsd":
+      command     => "npm install -g statsd",
+      creates     => "/usr/lib/node_modules/statsd/bin/statsd",
+      require     => Class['meteor'],
+      #require    => Exec['install nodejs'],
+      # you can trigger an update of statsd package by changing /etc/statsd.js, bit of a hack but works
+      subscribe   => File["/etc/statsd.js"];
+
+    "pip python-statsd":
+      command => "pip-python install python-statsd",
+      creates => "/usr/lib/python_statsd-1.5.7-py2.6.egg-info",
+      require => [Package['python-pip'], Exec['npm-statsd']];
   }
 
   file {
