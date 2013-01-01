@@ -45,7 +45,7 @@ class statsd ($graphite_host, $graphite_port = 2003, $port = 8125, $debug = 1, $
 
     "pip python-statsd":
       command => "pip-python install python-statsd",
-      creates => "/usr/lib/python_statsd-1.5.7-py2.6.egg-info",
+      creates => "/usr/lib/python2.6/site-packages/python_statsd-1.5.7-py2.6.egg-info",
       require => [Package['python-pip'], Exec['npm-statsd']];
   }
 
