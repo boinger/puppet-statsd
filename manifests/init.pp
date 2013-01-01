@@ -1,4 +1,10 @@
-class statsd ($graphite_host, $graphite_port = 2003, $port = 8125, $debug = 1, $flush_interval = 60000) {
+class statsd (
+    $graphite_host,
+    $graphite_port = 2003,
+    $port = 8125,
+    $debug = 1,
+    $flush_interval = 10000,
+    ) {
   Package { ensure => "installed", }
   Exec { path => ["/usr/bin", "/bin", "/sbin"], }
 
