@@ -1,12 +1,20 @@
 class statsd (
-    $graphite_host,
-    $graphite_port = 2003,
-    $port = 8125,
-    $debug = 1,
-    $flush_interval = 10000,
-    ) {
-  Package { ensure => "installed", }
+  $graphite_host,
+  $graphite_port = 2003,
+  $port = 8125,
+  $debug = 1,
+  $flush_interval = 10000,
+  ) {
   Exec { path => ["/usr/bin", "/bin", "/sbin"], }
+  Package { ensure => "installed", }
+
+  $prereqs = [
+    "python-pip",
+  ]
+
+  package { $prereqs:
+    require => Package['python'],
+  }
 
 /*
   exec {
@@ -78,14 +86,7 @@ class statsd (
   exec { "restart-statsd":
     command     => "stop statsd; start statsd",
     refreshonly => true,
-    require     => [
-          Class['meteor'],
-          #Exec['install nodejs'],
-          Exec["npm-statsd"],
-          ],
-    subscribe   => [
-          File['/etc/statsd.js'],
-          Exec['npm-statsd'],
-          ],
+    require     => [Class['meteor'], Exec["npm-statsd"], ],
+    subscribe   => [File['/etc/statsd.js'], Exec['npm-statsd'], ],
   }
 }
