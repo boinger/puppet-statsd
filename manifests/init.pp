@@ -38,13 +38,6 @@ class statsd (
   }
 */
 
-  user { "node":
-    ensure     => "present",
-    gid        => "users",
-    shell      => "/bin/bash",
-    managehome => "true",
-  }
-
   ## actually nodejs:
   include meteor
 
