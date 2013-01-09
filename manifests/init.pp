@@ -31,7 +31,7 @@ class statsd (
 
    exec {
     "clean old statsd":
-      command => "grep '#!/usr/bin/env node' /usr/bin/statsd && rm -f /usr/bin/statsd";
+      command => "grep '#!/usr/bin/env node' /usr/bin/statsd && rm -f /usr/bin/statsd || true";
 
     "clone ruby-statsdserver":
       cwd     => "/usr/local/src",
