@@ -50,6 +50,9 @@ class statsd (
   } 
 
   file {
+    "/etc/statsd.js":
+      ensure  => absent;
+
     "/etc/init/statsd.conf":
       ensure  => file,
       owner   => "root",
@@ -72,7 +75,7 @@ class statsd (
   exec { "restart-statsd":
     command     => "restart statsd",
     refreshonly => true,
-    require     => [ Exec["install ruby-statsdserver"], ],
+    require     => [ Exec["install ruby-statsdserver"], Service['statsd']],
     subscribe   => [ File['/etc/statsd.conf'], File['/etc/init/statsd.conf'], ],
   }
 
