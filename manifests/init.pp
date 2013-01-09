@@ -30,6 +30,9 @@ class statsd (
   }
 
    exec {
+    "clean old statsd":
+      command => "grep '#!/usr/bin/env node' /usr/bin/statsd && rm -f /usr/bin/statsd";
+
     "clone ruby-statsdserver":
       cwd     => "/usr/local/src",
       command => "git clone git://github.com/boinger/ruby-statsdserver.git",
@@ -46,7 +49,7 @@ class statsd (
       cwd     => "/usr/local/src/ruby-statsdserver",
       command => "gem install statsdserver",
       creates => "/usr/bin/statsd",
-      require => Exec['build ruby-statsdserver'];
+      require => [Exec['build ruby-statsdserver'], Exec['clean old statsd']];
   } 
 
   file {
