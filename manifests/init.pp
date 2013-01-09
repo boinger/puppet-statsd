@@ -3,83 +3,94 @@ class statsd (
   $graphite_port = 2003,
   $port = 8125,
   $debug = 1,
-  $flush_interval = 10000,
+  $flush_interval = 5,
   ) {
   Exec { path => ["/usr/bin", "/bin", "/sbin"], }
   Package { ensure => "installed", }
 
-  $prereqs = [
-    "python-pip",
+  #$prereqs = [
+    #'zeromq3',
+    #'zeromq3-devel',
+  #]
+
+  #package { $prereqs: }
+
+  $pencil_gems = [
+    #'em-zeromq',
+    'bundler',
+    'daemons',
+    'eventmachine',
+    'parseconfig',
+    'sysexits',
   ]
 
-  package { $prereqs:
-    require => Package['python'],
+  package { $pencil_gems:
+    provider => 'gem',
+    require  => [Package['ruby'], Package['rubygems']]
   }
 
-/*
-  exec {
-    "clone nodejs":
+   exec {
+    "clone ruby-statsdserver":
       cwd     => "/usr/local/src",
-      command => "git clone git://github.com/joyent/node.git",
-      creates => "/usr/local/src/node",
+      command => "git clone git://github.com/boinger/ruby-statsdserver.git",
+      creates => "/usr/local/src/ruby-statsdserver",
       require => Package['git'];
 
-    "build nodejs":
-      cwd     => "/usr/local/src/node",
-      command => "/usr/local/src/node/configure && make -j3",
-      creates => "/usr/local/src/node/out/Release/node",
-      require => Exec['clone nodejs'];
+    "build ruby-statsdserver":
+      cwd     => "/usr/local/src/ruby-statsdserver",
+      command => "gem build statsd.gemspec",
+      creates => "/usr/local/src/ruby-statsdserver/statsdserver-0.9.1pre.gem",
+      require => Exec['clone ruby-statsdserver'];
 
-    "install nodejs":
-      cwd     => "/usr/local/src/node",
-      command => "make install",
-      creates => "/usr/local/bin/node",
-      require => Exec['build nodejs'];
-  }
-*/
-
-  ## actually nodejs:
-  include meteor
-
-  exec {
-    "npm-statsd":
-      command     => "npm install -g statsd",
-      creates     => "/usr/lib/node_modules/statsd/bin/statsd",
-      require     => Class['meteor'],
-      #require    => Exec['install nodejs'],
-      # you can trigger an update of statsd package by changing /etc/statsd.js, bit of a hack but works
-      subscribe   => File["/etc/statsd.js"];
-
-    "pip python-statsd":
-      command => "pip-python install python-statsd",
-      creates => "/usr/lib/python2.6/site-packages/python_statsd-1.5.7-py2.6.egg-info",
-      require => [Package['python-pip'], Exec['npm-statsd']];
-  }
+    "install ruby-statsdserver":
+      cwd     => "/usr/local/src/ruby-statsdserver",
+      command => "gem install statsdserver",
+      creates => "/usr/bin/statsd",
+      require => Exec['build ruby-statsdserver'];
+  } 
 
   file {
     "/etc/init/statsd.conf":
-      ensure => file,
-      owner  => "root",
-      group  => "root",
-      mode   => "0644",
-      source => "puppet:///modules/statsd/etc/init/statsd.conf";
-
-    "/usr/local/bin/statsd_client.pl":
-      ensure => file,
-      owner  => "root",
-      group  => "root",
-      mode   => "0755",
-      source => "puppet:///modules/statsd/usr/local/bin/statsd_client.pl";
-
-    "/etc/statsd.js":
       ensure  => file,
-      content => template("statsd/etc/statsd.js.erb");
+      owner   => "root",
+      group   => "root",
+      mode    => "0644",
+      source  => "puppet:///modules/statsd/etc/init/statsd.conf",
+      require => User['statsd'];
+
+    "/etc/statsd.conf":
+      ensure  => file,
+      content => template("statsd/etc/statsd.conf.erb");
+ 
+    "/var/log/statsd.log":
+      ensure  => file,
+      owner   => "statsd",
+      group   => "root",
+      mode    => "0644";
   }
 
   exec { "restart-statsd":
-    command     => "stop statsd; start statsd",
+    command     => "restart statsd",
     refreshonly => true,
-    require     => [Class['meteor'], Exec["npm-statsd"], ],
-    subscribe   => [File['/etc/statsd.js'], Exec['npm-statsd'], ],
+    require     => [ Exec["install ruby-statsdserver"], ],
+    subscribe   => [ File['/etc/statsd.conf'], File['/etc/init/statsd.conf'], ],
+  }
+
+  service {
+    'statsd':
+      ensure     => 'running',
+      #enable     => true,
+      hasrestart => true,
+      hasstatus  => true,
+      restart    => "/sbin/restart ${name}",
+      start      => "/sbin/start ${name}",
+      stop       => "/sbin/stop ${name}",
+      status     => "/sbin/status ${name} | grep '/running' 1>/dev/null 2>&1",
+      require    => [
+        File['/etc/statsd.conf'],
+        File['/var/log/statsd.log'],
+        File['/etc/init/statsd.conf'],
+        Exec['install ruby-statsdserver'],
+        ];
   }
 }
