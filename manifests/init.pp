@@ -77,7 +77,7 @@ class statsd (
   }
 
   exec { "restart-statsd":
-    command     => "restart statsd",
+    command     => "stop statsd ; start statsd",
     refreshonly => true,
     require     => [ Exec["install ruby-statsdserver"], Service['statsd']],
     subscribe   => [ File['/etc/statsd.conf'], File['/etc/init/statsd.conf'], ],
