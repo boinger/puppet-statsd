@@ -30,8 +30,8 @@ class statsd (
   }
 
    exec {
-    "clean old statsd":
-      command => "rm -f /usr/bin/statsd || true && rm -rf /usr/local/src/ruby-statsdserver || true";
+    #"clean old statsd":
+      #command => "rm -f /usr/bin/statsd || true && rm -rf /usr/local/src/ruby-statsdserver || true";
 
     "clone ruby-statsdserver":
       cwd     => "/usr/local/src",
@@ -50,7 +50,7 @@ class statsd (
       command => "gem install statsdserver",
       creates => "/usr/bin/statsd",
       notify  => Exec['restart-statsd'],
-      require => [Exec['build ruby-statsdserver'], Exec['clean old statsd']];
+      require => [Exec['build ruby-statsdserver'], ];
   } 
 
   file {
