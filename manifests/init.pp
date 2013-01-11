@@ -49,6 +49,7 @@ class statsd (
       cwd     => "/usr/local/src/ruby-statsdserver",
       command => "gem install statsdserver",
       creates => "/usr/bin/statsd",
+      notify  => Exec['restart-statsd'],
       require => [Exec['build ruby-statsdserver'], Exec['clean old statsd']];
   } 
 
