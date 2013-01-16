@@ -54,9 +54,6 @@ class statsd (
   } 
 
   file {
-    "/etc/statsd.js":
-      ensure  => absent;
-
     "/etc/init/statsd.conf":
       ensure  => file,
       owner   => "root",
@@ -69,11 +66,19 @@ class statsd (
       ensure  => file,
       content => template("statsd/etc/statsd.conf.erb");
  
-    "/var/log/statsd.log":
+    "/data/log/statsd":
+      ensure  => directory,
+      owner   => "statsd",
+      group   => "root",
+      mode    => "0755",
+      require => File['/data/log'];
+
+    "/data/log/statsd/statsd.log":
       ensure  => file,
       owner   => "statsd",
       group   => "root",
-      mode    => "0644";
+      mode    => "0644",
+      require => File['/data/log/statsd'];
   }
 
   exec { "restart-statsd":
@@ -95,7 +100,7 @@ class statsd (
       status     => "/sbin/status ${name} | grep '/running' 1>/dev/null 2>&1",
       require    => [
         File['/etc/statsd.conf'],
-        File['/var/log/statsd.log'],
+        File['/data/log/statsd/statsd.log'],
         File['/etc/init/statsd.conf'],
         Exec['install ruby-statsdserver'],
         ];
