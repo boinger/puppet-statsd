@@ -51,7 +51,7 @@ class statsd (
       creates => "/usr/bin/statsd",
       notify  => Exec['restart-statsd'],
       require => [Exec['build ruby-statsdserver'], ];
-  } 
+  }
 
   file {
     "/etc/init/statsd.conf":
@@ -65,7 +65,7 @@ class statsd (
     "/etc/statsd.conf":
       ensure  => file,
       content => template("statsd/etc/statsd.conf.erb");
- 
+
     "/data/log/statsd":
       ensure  => directory,
       owner   => "statsd",
