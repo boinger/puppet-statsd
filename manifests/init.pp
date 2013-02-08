@@ -1,22 +1,20 @@
 class statsd (
   $graphite_host,
-  $graphite_port = 2003,
-  $port = 8125,
-  $debug = 1,
+  $graphite_port  = 2003,
+  $port           = 8125,
+  $debug          = 1,
   $flush_interval = 5,
   ) {
   Exec { path => ["/usr/bin", "/bin", "/sbin"], }
   Package { ensure => "installed", }
-
-  #$prereqs = [
-    #'zeromq3',
-    #'zeromq3-devel',
-  #]
-
-  #package { $prereqs: }
+  File {
+    ensure => present,
+    owner  => "root",
+    group  => "root",
+    mode   => 0644,
+  }
 
   $pencil_gems = [
-    #'em-zeromq',
     'bundler',
     'daemons',
     'eventmachine',
@@ -26,7 +24,7 @@ class statsd (
 
   package { $pencil_gems:
     provider => 'gem',
-    require  => [Package['ruby'], Package['rubygems']]
+    require  => [Package['ruby'], Package['rubygems'], ];
   }
 
    exec {
@@ -51,47 +49,37 @@ class statsd (
       creates => "/usr/bin/statsd",
       notify  => Exec['restart-statsd'],
       require => [Exec['build ruby-statsdserver'], ];
+
+    "restart-statsd":
+      command     => "stop statsd ; start statsd",
+      refreshonly => true,
+      require     => [ Exec["install ruby-statsdserver"], Service['statsd'], ],
+      subscribe   => [ File['/etc/statsd.conf'], File['/etc/init/statsd.conf'], ];
   }
 
   file {
     "/etc/init/statsd.conf":
-      ensure  => file,
-      owner   => "root",
-      group   => "root",
-      mode    => "0644",
       source  => "puppet:///modules/statsd/etc/init/statsd.conf",
       require => User['statsd'];
 
     "/etc/statsd.conf":
-      ensure  => file,
       content => template("statsd/etc/statsd.conf.erb");
 
     "/data/log/statsd":
       ensure  => directory,
       owner   => "statsd",
-      group   => "root",
-      mode    => "0755",
+      mode    => 0755,
       require => File['/data/log'];
 
     "/data/log/statsd/statsd.log":
       ensure  => file,
       owner   => "statsd",
-      group   => "root",
-      mode    => "0644",
       require => File['/data/log/statsd'];
-  }
-
-  exec { "restart-statsd":
-    command     => "stop statsd ; start statsd",
-    refreshonly => true,
-    require     => [ Exec["install ruby-statsdserver"], Service['statsd']],
-    subscribe   => [ File['/etc/statsd.conf'], File['/etc/init/statsd.conf'], ],
   }
 
   service {
     'statsd':
       ensure     => 'running',
-      #enable     => true,
       hasrestart => true,
       hasstatus  => true,
       restart    => "/sbin/restart ${name}",
