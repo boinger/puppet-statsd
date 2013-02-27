@@ -40,7 +40,7 @@ class statsd (
     "build ruby-statsdserver":
       cwd     => "/usr/local/src/ruby-statsdserver",
       command => "gem build statsd.gemspec",
-      creates => "/usr/local/src/ruby-statsdserver/statsdserver-0.9.1pre.gem",
+      creates => "/usr/local/src/ruby-statsdserver/statsdserver-0.9.gem",
       require => Exec['clone ruby-statsdserver'];
 
     "install ruby-statsdserver":
