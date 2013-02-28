@@ -28,9 +28,6 @@ class statsd (
   }
 
    exec {
-    #"clean old statsd":
-      #command => "rm -f /usr/bin/statsd || true && rm -rf /usr/local/src/ruby-statsdserver || true";
-
     "clone ruby-statsdserver":
       cwd     => "/usr/local/src",
       command => "git clone git://github.com/boinger/ruby-statsdserver.git",
