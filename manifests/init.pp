@@ -4,7 +4,9 @@ class statsd (
   $port           = 8125,
   $debug          = 1,
   $flush_interval = 5,
+  $version        = '0.9.1pre'
   ) {
+
   Exec { path => ["/usr/bin", "/bin", "/sbin"], }
   Package { ensure => "installed", }
   File {
@@ -37,7 +39,7 @@ class statsd (
     "build ruby-statsdserver":
       cwd     => "/usr/local/src/ruby-statsdserver",
       command => "gem build statsd.gemspec",
-      creates => "/usr/local/src/ruby-statsdserver/statsdserver-0.9.gem",
+      creates => "/usr/local/src/ruby-statsdserver/statsdserver-${version}.gem",
       require => Exec['clone ruby-statsdserver'];
 
     "install ruby-statsdserver":
