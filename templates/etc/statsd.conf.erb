@@ -10,7 +10,8 @@ inputs = udp
 # Outputs are configured in a separate [output:$input] config section.
 # NOTE: daemonize==true is incompatible with the stdout output.
 #outputs = stdout, tcp, amqp
-outputs = stdout, tcp
+#outputs = stdout, tcp
+outputs = tcp
 
 # How often statsd does counter/timer aggregation and flushes updates
 # to any configured outputs.
