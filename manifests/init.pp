@@ -4,7 +4,7 @@ class statsd (
   $port           = 8125,
   $debug          = 1,
   $flush_interval = 5,
-  $version        = '0.9.1pre'
+  $version        = '0.12'
   ) {
 
   Exec { path => ["/usr/bin", "/bin", "/sbin"], }
