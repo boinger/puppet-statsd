@@ -15,7 +15,7 @@ outputs = tcp
 
 # How often statsd does counter/timer aggregation and flushes updates
 # to any configured outputs.
-flush_interval = <%= flush_interval %>
+flush_interval = <%= @flush_interval %>
 
 # Whether or not to "preserve" counters by sending zeros for a
 # $flush_interval where we haven't seen any increment updates.
@@ -39,21 +39,21 @@ inject_timer_names = true
 # Configuration for UDP input, if enabled in 'inputs' above.
 [input:udp]
 bind = 127.0.0.1
-port = <%= port %>
+port = <%= @port %>
 
 # Configuration for ZeroMQ input.
 # This is the bind string for a ZeroMQ PULL socket.
 # For possible options, see http://api.zeromq.org/2-2:zmq-bind
 # Most common: tcp://host:port or ipc:///path/to/file
 [input:zeromq]
-bind = tcp://127.0.0.1:<%= port %>
+bind = tcp://127.0.0.1:<%= @port %>
 
 # Configuration for the TCP output.  This should point at graphite's
 # carbon daemon, or something that understands newline-delimited
 # graphite metric update strings.
 [output:tcp]
-host = <%= graphite_host %>
-port = <%= graphite_port %>
+host = <%= @graphite_host %>
+port = <%= @graphite_port %>
 
 # Configuration for the AMQP output.
 # Possible exchange types: direct, fanout, topic
