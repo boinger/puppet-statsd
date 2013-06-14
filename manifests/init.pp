@@ -38,7 +38,7 @@ class statsd (
 
     "build ruby-statsdserver":
       cwd     => "/usr/local/src/ruby-statsdserver",
-      command => "gem build statsd.gemspec",
+      command => "git pull && gem build statsd.gemspec && gem uninstall statsdserver",
       creates => "/usr/local/src/ruby-statsdserver/statsdserver-${version}.gem",
       require => Exec['clone ruby-statsdserver'];
 
