@@ -40,7 +40,7 @@ inject_timer_names = true
 
 # Configuration for UDP input, if enabled in 'inputs' above.
 [input:udp]
-bind = 127.0.0.1
+bind = <%= @bind_interface %>
 port = <%= @port %>
 
 # Configuration for ZeroMQ input.

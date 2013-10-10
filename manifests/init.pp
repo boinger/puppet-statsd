@@ -1,6 +1,7 @@
 class statsd (
   $graphite_host,
   $graphite_port  = 2003,
+  $bind_interface = '127.0.0.1',
   $port           = 8125,
   $debug          = 1,
   $flush_interval = 5,
