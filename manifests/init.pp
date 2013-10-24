@@ -17,7 +17,7 @@ class statsd (
     mode   => 0644,
   }
 
-  $pencil_gems = [
+  $statsd_gems = [
     'bundler',
     'daemons',
     'eventmachine',
@@ -25,7 +25,7 @@ class statsd (
     'sysexits',
   ]
 
-  package { $pencil_gems:
+  package { $statsd_gems:
     provider => 'gem',
     require  => [Package['ruby'], Package['rubygems'], ];
   }
