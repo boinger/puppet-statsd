@@ -34,7 +34,7 @@ prefix = stats
 # program sending data to statsd does not have to agree on the local part
 # of the metric name.
 # You do not need to include a leading '.' here, it will be auto added.
-suffix = <%= @cluster_name %>.<%= @hostname %>
+suffix = <%= @suffix %>
 
 inject_timer_names = true
 

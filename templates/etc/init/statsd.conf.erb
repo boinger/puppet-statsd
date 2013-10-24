@@ -11,4 +11,4 @@ stop on runlevel [016]
 respawn
 
 #exec su -c "/usr/bin/statsd /etc/statsd.conf > /var/log/statsd.log 2>&1" statsd
-exec /usr/bin/statsd /etc/statsd.conf > /data/log/statsd/statsd.log 2>&1
+exec /usr/bin/statsd /etc/<%= @name %>.conf > /data/log/statsd/<%= @name %>.log 2>&1
