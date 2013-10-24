@@ -48,7 +48,7 @@ port = <%= @listen_port %>
 # For possible options, see http://api.zeromq.org/2-2:zmq-bind
 # Most common: tcp://host:port or ipc:///path/to/file
 [input:zeromq]
-bind = tcp://127.0.0.1:<%= @port %>
+bind = tcp://127.0.0.1:<%= @listen_port %>
 
 # Configuration for the TCP output.  This should point at graphite's
 # carbon daemon, or something that understands newline-delimited
