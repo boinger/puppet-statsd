@@ -3,7 +3,7 @@ class statsd (
   $graphite_port  = 2003,
   $suffix         = '',
   $bind_interface = '127.0.0.1',
-  $port           = 8125,
+  $listen_port    = 8125,
   $debug          = 1,
   $flush_interval = 5,
   $version        = '0.12'
@@ -64,12 +64,12 @@ class statsd (
   }
 
   statsd::service {
-    "statsd-${port}":
+    "statsd":
       graphite_host  => $graphite_host,
       graphite_port  => $graphite_port,
       suffix         => $suffix,
       bind_interface => $bind_interface,
-      listen_port    => $port,
+      listen_port    => $listen_port,
       debug          => $debug,
       flush_interval => $flush_interval;
   }
