@@ -1,17 +1,14 @@
 class statsd (
   $graphite_host,
   $graphite_port  = 2003,
-  $suffix         = '',
+  $suffix         = $hostname,
+  $prefix         = 'stats',
   $bind_interface = '127.0.0.1',
   $listen_port    = 8125,
   $debug          = 1,
   $flush_interval = 5,
   $version        = '0.12'
   ) {
-
-  if (!$suffix) {
-    $suffix = $hostname
-  }
 
   Exec { path => ["/usr/bin", "/bin", "/sbin"], }
   Package { ensure => "installed", }
@@ -68,6 +65,7 @@ class statsd (
       graphite_host  => $graphite_host,
       graphite_port  => $graphite_port,
       suffix         => $suffix,
+      prefix         => $prefix,
       bind_interface => $bind_interface,
       listen_port    => $listen_port,
       debug          => $debug,

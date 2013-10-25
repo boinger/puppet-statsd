@@ -2,6 +2,7 @@ define statsd::service (
   $graphite_host,
   $graphite_port  = 2003,
   $suffix,
+  $prefix         = 'stats',
   $bind_interface = '127.0.0.1',
   $listen_port    = 8125,
   $debug          = 1,

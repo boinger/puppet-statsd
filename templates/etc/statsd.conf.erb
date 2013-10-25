@@ -27,7 +27,7 @@ preserve_counters = true
 # The prefix for all statsd-generated graphite metric names.  Note that
 # timers will have a prefix of "$prefix.timers".
 # You do not need to include a trailing '.' here, it will be auto added.
-prefix = stats
+prefix = <%= @prefix %>
 
 # The suffix for all statsd-generated graphite metric names.  This can be
 # useful if you want to append the colo/machine name here, then every
