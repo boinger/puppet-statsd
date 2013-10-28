@@ -6,7 +6,7 @@ class statsd (
   $bind_interface = '127.0.0.1',
   $listen_port    = 8125,
   $debug          = 1,
-  $flush_interval = 5,
+  $flush_interval = 10,
   $version        = '0.12'
   ) {
 
