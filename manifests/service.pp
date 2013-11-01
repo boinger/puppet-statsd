@@ -50,6 +50,7 @@ define statsd::service (
       require    => [
         File["/etc/init/${name}.conf"],
         File["/etc/${name}.conf"],
+        File["/data/log/statsd/"],
         ];
   }
 }
