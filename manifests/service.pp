@@ -5,7 +5,7 @@ define statsd::service (
   $prefix         = 'stats',
   $bind_interface = '127.0.0.1',
   $listen_port    = 8125,
-  $debug          = 1,
+  $debug          = 0,
   $flush_interval = 10,
   $comment        = false,
   ) {
