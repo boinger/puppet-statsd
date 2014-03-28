@@ -7,6 +7,7 @@ define statsd::service (
   $listen_port    = 8125,
   $debug          = 1,
   $flush_interval = 10,
+  $comment        = false,
   ) {
 
   Exec { path => ["/usr/bin", "/bin", "/sbin"], }

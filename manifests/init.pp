@@ -7,7 +7,8 @@ class statsd (
   $listen_port    = 8125,
   $debug          = 1,
   $flush_interval = 10,
-  $version        = '0.12'
+  $version        = '0.12',
+  $comment        = false,
   ) {
 
   Exec { path => ["/usr/bin", "/bin", "/sbin"], }
@@ -69,7 +70,8 @@ class statsd (
       bind_interface => $bind_interface,
       listen_port    => $listen_port,
       debug          => $debug,
-      flush_interval => $flush_interval;
+      flush_interval => $flush_interval,
+      comment        => $comment;
   }
 
 }
